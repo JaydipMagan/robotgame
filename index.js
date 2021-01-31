@@ -114,7 +114,7 @@ function keyPressed() {
 }
 
 function generateCollectables(){
-  let amount = w/5;
+  let amount = w;
   while(amount>0){
     let randomNumber = floor(random(1, grid.length-1));
     console.log(randomNumber);
