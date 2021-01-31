@@ -14,15 +14,25 @@
 /**
  * Maze generation code modified from above source
  */
+
+// game
 let init = false;
+let finished = false;
+let collectables = [];
+let score = 0;
+
+// grid 
 let cols, rows;
 let w = 40;
 let grid = [];
+
+// maze gen
 let current;
 let stack = [];
+
+// robot
 let robot;
 let goal;
-let finished = false;
 
 function setup() {
   createCanvas(600, 600);
@@ -38,6 +48,13 @@ function draw() {
       alert("You won!");
       finished = true;
     }
+    collectables.forEach(collectable => {
+      if(!grid[collectable].collected && grid[collectable].i==robot.i && grid[collectable].j==robot.j){
+        grid[collectable].collected=true;
+        score+=10;
+        document.getElementById("score").innerText = "Score : "+score;
+      }
+    });
   }
 }
 
@@ -47,16 +64,23 @@ function initEventHandlers(){
     w = 40;
     initSetup();
     document.getElementById("difficulty-mode").style.visibility="hidden";
+    document.getElementById("options").style.visibility="visible";
   }
   document.getElementById("mode-medium").onclick = function(){
     w = 30;
     initSetup();
     document.getElementById("difficulty-mode").style.visibility="hidden";
+    document.getElementById("options").style.visibility="visible";
   }
   document.getElementById("mode-hard").onclick = function(){
     w = 25;
     initSetup();
     document.getElementById("difficulty-mode").style.visibility="hidden";
+    document.getElementById("options").style.visibility="visible";
+  }
+  document.getElementById("options").onclick = function(){
+    resetGame();
+    document.getElementById("options").style.visibility="hidden";
   }
 }
 
@@ -65,6 +89,7 @@ function initSetup(){
   rows = floor(height / w);
 
   generateGrid();
+  generateCollectables();
   current = grid[0];
   current.userVisited = true;
   goal = grid[index(rows-1,cols-1)];
@@ -74,6 +99,11 @@ function initSetup(){
   init = true;
 }
 
+function resetGame(){
+  document.getElementById("difficulty-mode").style.visibility="visible";
+  window.location.reload();
+}
+
 function keyPressed() {
     let atCell = grid[index(robot.i,robot.j)];
     console.log(keyCode);
@@ -81,6 +111,19 @@ function keyPressed() {
       let newPosition = robot.move(keyCode,atCell);
       grid[index(newPosition[0],newPosition[1])].userVisited = true;
     }
+}
+
+function generateCollectables(){
+  let amount = w/5;
+  while(amount>0){
+    let randomNumber = floor(random(1, grid.length-1));
+    console.log(randomNumber);
+    if(!(randomNumber in collectables)){
+      grid[randomNumber].collectable = true;
+      collectables.push(randomNumber);
+      amount--;
+    }
+  }
 }
 
 function generateMaze(){

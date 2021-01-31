@@ -5,6 +5,8 @@ function Cell(i, j) {
     this.visited = false;
     this.userVisited = false;
     this.goal = false;
+    this.collectable = false;
+    this.collected = false;
     this.checkNeighbors = function() {
       let neighbors = [];
   
@@ -66,6 +68,11 @@ function Cell(i, j) {
       if (this.userVisited) {
         noStroke();
         fill(255, 0, 255, 100);
+        rect(x, y, w, w);
+      }
+      if (this.collectable && !this.collected) {
+        noStroke();
+        fill(255, 123, 255, 100);
         rect(x, y, w, w);
       }
     };
