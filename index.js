@@ -14,37 +14,73 @@
 /**
  * Maze generation code modified from above source
  */
+let init = false;
 let cols, rows;
 let w = 40;
 let grid = [];
 let current;
 let stack = [];
 let robot;
+let goal;
+let finished = false;
 
 function setup() {
   createCanvas(600, 600);
+  initEventHandlers();
+}
+
+function draw() {
+  background(51);
+  if(init){
+    renderGrid();
+    robot.render();
+    if(!finished && goal.i==robot.i && goal.j==robot.j){
+      alert("You won!");
+      finished = true;
+    }
+  }
+}
+
+
+function initEventHandlers(){
+  document.getElementById("mode-easy").onclick = function(){
+    w = 40;
+    initSetup();
+    document.getElementById("difficulty-mode").style.visibility="hidden";
+  }
+  document.getElementById("mode-medium").onclick = function(){
+    w = 30;
+    initSetup();
+    document.getElementById("difficulty-mode").style.visibility="hidden";
+  }
+  document.getElementById("mode-hard").onclick = function(){
+    w = 25;
+    initSetup();
+    document.getElementById("difficulty-mode").style.visibility="hidden";
+  }
+}
+
+function initSetup(){
   cols = floor(width / w);
   rows = floor(height / w);
 
   generateGrid();
   current = grid[0];
+  current.userVisited = true;
+  goal = grid[index(rows-1,cols-1)];
   generateMaze();
 
   robot = new Robot(0,0,w);
-}
-
-function draw() {
-  background(51);
-  for (let i = 0; i < grid.length; i++) {
-    grid[i].render();
-  }
-  robot.render();
+  init = true;
 }
 
 function keyPressed() {
     let atCell = grid[index(robot.i,robot.j)];
     console.log(keyCode);
-    robot.move(keyCode,atCell);
+    if(!finished){
+      let newPosition = robot.move(keyCode,atCell);
+      grid[index(newPosition[0],newPosition[1])].userVisited = true;
+    }
 }
 
 function generateMaze(){
@@ -73,6 +109,12 @@ function generateGrid(){
           grid.push(cell);
         }
     }
+}
+
+function renderGrid(){
+  for (let i = 0; i < grid.length; i++) {
+    grid[i].render();
+  }
 }
 
 function index(i, j) 

@@ -48,6 +48,7 @@ class Robot{
                 this.i+=1;
             }
         }
+        return [this.i,this.j];
     }
 
     render(){
@@ -56,7 +57,5 @@ class Robot{
         noStroke();
         fill("red");
         rect(x,y,this.size,this.size);
-        fill("blue");
-        rect(x+(this.size*0.25),y,this.size*0.5,this.size*0.5);
     }
 }
