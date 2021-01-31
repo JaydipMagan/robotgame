@@ -3,7 +3,8 @@ function Cell(i, j) {
     this.j = j;
     this.walls = [true, true, true, true];
     this.visited = false;
-  
+    this.goal = false;
+
     this.checkNeighbors = function() {
       let neighbors = [];
   
@@ -57,6 +58,11 @@ function Cell(i, j) {
         line(x, y + w, x, y);
       }
   
+      if(this.goal){
+        noStroke();
+        fill(0, 255, 0, 100);
+        rect(x, y, w, w);
+      }
     //   if (this.visited) {
     //     noStroke();
     //     fill(255, 0, 255, 100);

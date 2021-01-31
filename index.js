@@ -19,6 +19,7 @@ let w = 40;
 let grid = [];
 let current;
 let stack = [];
+let robot;
 
 function setup() {
   createCanvas(600, 600);
@@ -28,6 +29,8 @@ function setup() {
   generateGrid();
   current = grid[0];
   generateMaze();
+
+  robot = new Robot(0,0,w);
 }
 
 function draw() {
@@ -35,6 +38,13 @@ function draw() {
   for (let i = 0; i < grid.length; i++) {
     grid[i].render();
   }
+  robot.render();
+}
+
+function keyPressed() {
+    let atCell = grid[index(robot.i,robot.j)];
+    console.log(keyCode);
+    robot.move(keyCode,atCell);
 }
 
 function generateMaze(){
@@ -53,6 +63,7 @@ function generateMaze(){
             current = stack.pop();
         }
     }
+    grid[index(rows-1,cols-1)].goal = true;
 }
 
 function generateGrid(){
